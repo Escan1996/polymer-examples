@@ -4,9 +4,17 @@ String, Boolean, Number, Object, Array
 Binding:
 [[]] o {{}}
 
-Binding especial. En algunos atributos es necesario colocar el signo de pesos al final para que
+Binding con ciertos atributos. En algunos atributos es necesario colocar el signo de pesos al final para que
 funcione el binding
 <div class$="[[]]">
+
+Computed Property
+Se utiliza para establecer el valor de una propiedad con base en el retorno de un valor.
+
+Computed Binding
+<div class$="viewport [[isHamburgerActive(showHamburger)]]">
+-Si no tiene argumentos, solo se ejecuta una vez.
+-Si tiene argumentos y si alguno de ellos cambia, se ejecuta de nuevo.
 
 Eventos:
 on-click="miMetodo" --> Va sin parentesis
