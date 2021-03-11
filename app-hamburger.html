@@ -1,0 +1,186 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="app-hamburger">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        font-family: sans-serif;
+      }
+
+      .hamburger {
+        display: inline-block;
+        width: 3.125rem;
+        height: 3.125rem;
+        background-color: chocolate;
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 1;
+        transform: translate(-50%, 50%);
+        cursor: pointer;
+        border-radius: 0.375rem;
+      }
+
+      .hamburger-line {
+        display: inline-block;
+        width: 80%;
+        height: 10%;
+        background-color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transition: .5s ease;
+      }
+
+      .hamburger-line:nth-child(1) {
+        transform: translate(-50%, -250%);
+      }
+
+      .hamburger-line:nth-child(2) {
+        transform: translate(-50%, -50%);
+      }
+
+      .hamburger-line:nth-child(3) {
+        transform: translate(-50%, 150%);
+      }
+
+      .hamburger:hover .hamburger-line:nth-child(1) {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      .hamburger:hover .hamburger-line:nth-child(2) {
+        width: 0%;
+      }
+
+      .hamburger:hover .hamburger-line:nth-child(3) {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+
+      .viewport {
+        background-color: rgba(0, 0, 0, .9);
+        position: fixed;
+        inset: 1.25rem;
+        border-radius: 0.9375rem;
+        transform: translateX(calc(100% + 20px));
+        transition: .5s ease;
+      }
+
+      .viewport.active {
+        transform: translateX(0);
+      }
+
+      .viewport-wp-items {
+        height: 100%;
+      }
+
+      .viewport-items {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        height: 100%;
+        display: grid;
+        justify-items: center;
+      }
+
+      .viewport-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        width: 100%;
+        border-bottom: 4px solid rgba(255, 255, 255, 0.75);
+      }
+
+      .viewport-item:last-child {
+        border-bottom: none;
+      }
+
+      .viewport-item-text {
+        text-decoration: none;
+        color: white;
+        font-size: 2rem;
+      }
+    </style>
+    <div class="hamburger" on-click="toggleHamburger">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </div>
+    <div class$="viewport [[isHamburgerActive(showHamburger)]]">
+      <nav class="viewport-wp-items">
+        <ul class="viewport-items">
+          <li class="viewport-item">
+            <a href="" class="viewport-item-text">Opcion 1</a>
+          </li>
+          <li class="viewport-item">
+            <a href="" class="viewport-item-text">Opcion 2</a>
+          </li>
+          <li class="viewport-item">
+            <a href="" class="viewport-item-text">Opcion 3</a>
+          </li>
+          <li class="viewport-item">
+            <a href="" class="viewport-item-text">Opcion 4</a>
+          </li>
+          <li class="viewport-item">
+            <a href="" class="viewport-item-text">Opcion 5</a>
+          </li>
+          <li class="viewport-item">
+            <a href="" class="viewport-item-text">Opcion 6</a>
+          </li>
+          <li class="viewport-item">
+            <a href="" class="viewport-item-text">Opcion 7</a>
+          </li>
+          <li class="viewport-item">
+            <a href="" class="viewport-item-text">Opcion 8</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </template>
+
+  <script>
+    /**
+     * `landing-page`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class AppHamburger extends Polymer.Element {
+      static get is() {
+        return 'app-hamburger';
+      }
+      static get properties() {
+        return {
+          showHamburger: {
+            type: Boolean,
+            value: false
+          },
+          position: {
+            type: String
+          },
+          resolution: {
+            type: Number
+          },
+          items: {
+            type: Array,
+            value: []
+          }
+        };
+      }
+
+      toggleHamburger() {
+        this.set('showHamburger', !this.get('showHamburger'));
+      }
+
+      isHamburgerActive(booleanValue) {
+        return booleanValue ? 'active' : '';
+      }
+
+    }
+
+    window.customElements.define(AppHamburger.is, AppHamburger);
+  </script>
+</dom-module>

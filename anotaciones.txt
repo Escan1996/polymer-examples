@@ -4,6 +4,10 @@ String, Boolean, Number, Object, Array
 Binding:
 [[]] o {{}}
 
+Binding especial. En algunos atributos es necesario colocar el signo de pesos al final para que
+funcione el binding
+<div class$="[[]]">
+
 Eventos:
 on-click="miMetodo" --> Va sin parentesis
 
