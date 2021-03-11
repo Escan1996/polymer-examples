@@ -1,0 +1,26 @@
+Tipos de datos:
+String, Boolean, Number, Object, Array
+
+Binding:
+[[]] o {{}}
+
+Eventos:
+on-click="miMetodo" --> Va sin parentesis
+
+Dom Repeat
+<template is="dom-repeat" items="[[arreglo]]" as="miAlias">
+
+Dom If
+<template is="dom-if" if="{{propiedad Boolean}}">
+
+Obtener elemento seleccionado dentro de una iteracion con dom-repeat
+e.model.get('alias/item.valor')
+
+Modificar elemento seleccionado dentro de una iteracion con dom-repeat
+e.model.set('alias/item.valor,nuevoValor)
+
+Obtener el valor de una propiedad
+this.get('nombreDeLaPropiedad')
+
+Modificar el valor de una propiedad
+this.set('nombreDeLaPropiedad',nuevoValor)

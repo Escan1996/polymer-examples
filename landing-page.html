@@ -1,0 +1,197 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="./app-card.html">
+<link rel="import" href="./app-header.html">
+
+<dom-module id="landing-page">
+  <template>
+    <style>
+      :host {
+        display: grid;
+        height: 100%;
+        grid-template-rows: auto 1fr auto;
+        font-family: sans-serif;
+      }
+
+      header {
+        background-color: black;
+        color: white;
+        padding: 2rem;
+      }
+
+      main {
+        background-color: darkgreen;
+        color: white;
+        padding: 2rem;
+      }
+
+      footer {
+        background-color: darkred;
+        color: white;
+        padding: 2rem;
+      }
+
+      app-card[image-path*="tsuru"] {
+        border: 4px solid red;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      app-card {
+        cursor: pointer;
+      }
+
+      button {
+        margin: 1rem 0;
+        font-size: 1.2rem;
+      }
+    </style>
+    <header>
+      <app-header options="[[menuElements]]"></app-header>
+    </header>
+    <main>
+      <template is="dom-if" if="{{mostrarNombrePagina}}">
+        <h1>[[nombrePagina]]</h1>
+      </template>
+      <div>
+        <button on-click="cambiarNombre">Cambiar nombre de mi pagina</button>
+      </div>
+      <div>
+        <button on-click="mostrarNomPag">Mostrar / Ocultar nombre pagina</button>
+      </div>
+      <template is="dom-repeat" items="[[cars]]" as="car">
+        <app-card on-click="seleccionarElemento" image-path="[[car.image]]" title="[[car.title]]"
+          description="[[car.desc]]" price="[[car.price]]">
+        </app-card>
+      </template>
+    </main>
+    <footer>Soy un footer</footer>
+  </template>
+
+  <script>
+    /**
+     * `landing-page`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class LandingPage extends Polymer.Element {
+
+      static get is() {
+        return 'landing-page';
+      }
+
+      static get properties() {
+        return {
+          mostrarNombrePagina: {
+            type: Boolean,
+            value: false
+          },
+          nombrePagina: {
+            type: String,
+            value: 'Nombre de mi página'
+          },
+          cars: {
+            type: Array,
+            value: []
+          },
+          menuElements: {
+            type: Array,
+            value: [
+              'Autos',
+              'Casas',
+              'Bicicletas',
+              'Viajes',
+              'Hoteles'
+            ]
+          }
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.loadCars();
+      }
+
+      loadCars() {
+        const carsApi = [{
+            image: 'https://cdn.forbes.com.mx/2016/06/tsuru-nissan.jpg',
+            title: 'Tsuru',
+            desc: 'Tsuru tuneado',
+            price: '9,555.00'
+          },
+          {
+            image: 'https://i.blogs.es/736630/kathleen_brooks_1967_annie_beetle--9197/1366_2000.jpg',
+            title: 'Vochito',
+            desc: 'Vochito rojo',
+            price: '5,500.00'
+          },
+          {
+            image: 'https://cdn.motor1.com/images/mgl/LpyGR/s1/ford-raptor-renderings.jpg',
+            title: 'Raptor',
+            desc: 'Raptor 2021',
+            price: '15,500.55'
+          },
+          {
+            image: 'https://upload.wikimedia.org/wikipedia/commons/1/13/Red_2019_Ferrari_SF90_Stradale_%2848264238897%29_%28cropped%29.jpg',
+            title: 'Ferrari',
+            desc: 'Ferrari rojo',
+            price: '100,000.00'
+          },
+          {
+            image: 'https://cdn.forbes.com.mx/2016/06/tsuru-nissan.jpg',
+            title: 'Tsuru',
+            desc: 'Tsuru tuneado',
+            price: '9,555.00'
+          },
+          {
+            image: 'https://i.blogs.es/736630/kathleen_brooks_1967_annie_beetle--9197/1366_2000.jpg',
+            title: 'Vochito',
+            desc: 'Vochito rojo',
+            price: '5,500.00'
+          },
+          {
+            image: 'https://cdn.motor1.com/images/mgl/LpyGR/s1/ford-raptor-renderings.jpg',
+            title: 'Raptor',
+            desc: 'Raptor 2021',
+            price: '15,500.55'
+          },
+          {
+            image: 'https://upload.wikimedia.org/wikipedia/commons/1/13/Red_2019_Ferrari_SF90_Stradale_%2848264238897%29_%28cropped%29.jpg',
+            title: 'Ferrari',
+            desc: 'Ferrari rojo',
+            price: '100,000.00'
+          }
+        ];
+        this.set('cars', carsApi);
+      }
+
+      seleccionarElemento(e) {
+        //Obtener el objeto seleccionado
+        //e.model.car.
+
+        //Obtener un valor del objeto seleccionado
+        //e.model.get('car.title') // Sin alias = e.model.get('item.title') 
+
+        //Cambiar un valor del objeto seleccionado
+        // e.model.set('car.title','Lambo');
+        alert(`Le has dado click al objeto: ${e.model.get('car.title')}`);
+      }
+
+      cambiarNombre() {
+        alert('Yo soy el valor de la propiedad nombrePagina:' + this.get('nombrePagina'));
+        this.set('nombrePagina', 'Yo soy el nuevo nombre');
+      }
+
+      mostrarNomPag() {
+        this.set('mostrarNombrePagina', !this.get('mostrarNombrePagina'));
+      }
+
+    }
+
+    window.customElements.define(LandingPage.is, LandingPage);
+  </script>
+</dom-module>

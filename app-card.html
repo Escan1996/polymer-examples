@@ -1,0 +1,125 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="app-card">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        font-family: sans-serif;
+      }
+
+      .card {
+        display: inline-grid;
+        grid-template-rows: auto 1fr auto;
+        width: 200px;
+        height: 300px;
+        background-color: white;
+        color: black;
+        overflow: hidden;
+        padding: 1rem;
+      }
+
+      .card>div:nth-child(3) {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .card-header {
+        overflow: hidden;
+      }
+
+      .card-header .card-image {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+      }
+
+      .card-description {
+        margin-top: .5rem;
+      }
+
+      .card-buy {
+
+        background-color: transparent;
+        border-color: brown;
+        color: brown;
+        padding: .4rem .45rem;
+        border-radius: .5rem;
+        cursor: pointer;
+        transition: .25s ease;
+      }
+
+      .card-buy:hover {
+        background-color: brown;
+        ;
+        color: white;
+      }
+
+      .card-price {
+        font-size: 1.7rem;
+      }
+    </style>
+    <div class="card">
+      <div class="card-header">
+        <img class="card-image" src="[[imagePath]]">
+      </div>
+      <div class="card-body">
+        <span class="card-title">[[title]]</span>
+        <p class="card-description">[[description]]</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$[[price]]</span>
+        <!-- <button class="card-buy" on-click="buyItem">Comprar</button> -->
+      </div>
+    </div>
+  </template>
+
+  <script>
+    /**
+     * `landing-page`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class AppCard extends Polymer.Element {
+      static get is() {
+        return 'app-card';
+      }
+      static get properties() {
+        return {
+          imagePath: {
+            type: String,
+            value: 'https://fuksi-si.ams3.digitaloceanspaces.com/woocommerce-placeholder.png',
+            reflectToAttribute: true
+          },
+          title: {
+            type: String,
+            reflectToAttribute: true
+          },
+          description: {
+            type: String,
+            reflectToAttribute: true
+          },
+          price: {
+            type: String,
+            reflectToAttribute: true
+          }
+        };
+      }
+
+      buyItem() {
+        alert(`Has comprado este producto: ${this.get('title')}`);
+      }
+
+    }
+
+    window.customElements.define(AppCard.is, AppCard);
+  </script>
+</dom-module>
