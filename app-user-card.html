@@ -1,0 +1,125 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="app-user-card">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        font-family: sans-serif;
+        background-color: white;
+        padding: 1rem;
+      }
+
+      .card {
+        display: inline-grid;
+        grid-template-rows: auto 1fr auto;
+        color: black;
+        overflow: hidden;
+        height: 100%;
+      }
+
+      .card-header {
+        overflow: hidden;
+      }
+
+      .card-header .card-image {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+      }
+
+      .card-body {
+        display: grid;
+      }
+
+      .card-name {
+        font-size: 1.5rem;
+      }
+
+      .card-username {
+        margin-top: .5rem;
+      }
+
+      .card-footer {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        justify-items: center;
+      }
+
+      .card-city {
+        grid-area: 1 / 1 / 2 / 3;
+      }
+
+      .card-street {
+        grid-area: 2 / 1 / 3 / 3;
+      }
+
+      .card-delete {
+        grid-area: 3 / 1 / 4 / 2;
+      }
+
+      .card-replace {
+        grid-area: 3 / 2 / 4 / 3;
+      }
+    </style>
+    <div class="card">
+      <div class="card-header">
+        <img class="card-image" src="[[imagePath]]">
+      </div>
+      <div class="card-body">
+        <span class="card-name">[[name]]</span>
+        <span class="card-username">[[username]]</span>
+        <span class="card-email">[[email]]</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-city">[[address.city]]</span>
+        <span class="card-street">[[address.street]]</span>
+        <button class="card-delete">Eliminar</button>
+        <button class="card-replace">Reemplazar</button>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    /**
+     * `landing-page`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class AppUserCard extends Polymer.Element {
+      static get is() {
+        return 'app-user-card';
+      }
+      static get properties() {
+        return {
+          imagePath: {
+            type: String,
+            value: 'https://fuksi-si.ams3.digitaloceanspaces.com/woocommerce-placeholder.png',
+          },
+          id: {
+            type: Number
+          },
+          name: {
+            type: String
+          },
+          username: {
+            type: String
+          },
+          email: {
+            type: String
+          },
+          address: {
+            type: Object
+          }
+        };
+      }
+
+    }
+
+    window.customElements.define(AppUserCard.is, AppUserCard);
+  </script>
+</dom-module>

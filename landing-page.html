@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="./app-card.html">
+<link rel="import" href="./app-user-card.html">
 <link rel="import" href="./app-header.html">
 <link rel="import" href="./app-hamburger.html">
 
@@ -43,10 +44,37 @@
         cursor: pointer;
       }
 
+      app-user-card {
+        cursor: pointer;
+      }
+
       button {
         margin: 1rem 0;
         font-size: 1.2rem;
       }
+
+      .wrapper-user-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 280px));
+        justify-content: center;
+        grid-auto-rows: 320px;
+        column-gap: 1rem;
+        row-gap: 1rem;
+      }
+
+      /* @media screen and (min-width:320px) {
+        app-hamburger {
+          display: inline-block;
+        }
+
+      }
+
+      @media screen and (min-width:768px) {
+        app-hamburger {
+          display: none;
+        }
+
+      } */
     </style>
     <header>
       <app-header options="[[menuElements]]"></app-header>
@@ -61,14 +89,26 @@
       <div>
         <button on-click="mostrarNomPag">Mostrar / Ocultar nombre pagina</button>
       </div>
-      <template is="dom-repeat" items="[[cars]]" as="car">
-        <app-card on-click="seleccionarElemento" image-path="[[car.image]]" title="[[car.title]]"
-          description="[[car.desc]]" price="[[car.price]]">
-        </app-card>
-      </template>
+      <div>
+        <button on-click="pushElement">Agregar al final</button>
+        <button on-click="popElement">Eliminar ultimo</button>
+        <button on-click="unshiftElement">Agregar al inicio</button>
+        <button on-click="shiftElement">Eliminar al inicio</button>
+      </div>
+      <div class="wrapper-user-cards">
+        <template is="dom-repeat" items="[[users]]" as="user">
+          <app-user-card on-click="replaceElement" id="[[user.id]]" name="[[user.name]]" username="[[user.username]]"
+            email="[[user.email]]" address="[[user.address]]">
+          </app-user-card>
+        </template>
+      </div>
+
     </main>
     <footer>Soy un footer</footer>
-    <app-hamburger options="[[menuElements]]"></app-hamburger>
+    <template is="dom-if" if="{{showHamburger}}">
+      <app-hamburger pos-y="top" pos-x="right" options="[[menuElements]]"></app-hamburger>
+    </template>
+
   </template>
 
   <script>
@@ -92,11 +132,19 @@
             type: Boolean,
             value: false
           },
+          showHamburger: {
+            type: Boolean,
+            value: false
+          },
           nombrePagina: {
             type: String,
             value: 'Nombre de mi página'
           },
           cars: {
+            type: Array,
+            value: []
+          },
+          users: {
             type: Array,
             value: []
           },
@@ -115,61 +163,84 @@
 
       connectedCallback() {
         super.connectedCallback();
-        this.loadCars();
+        this.handleResize();
+        // this.loadCars();
+        this.loadUsers();
       }
 
-      loadCars() {
-        const carsApi = [{
-            image: 'https://cdn.forbes.com.mx/2016/06/tsuru-nissan.jpg',
-            title: 'Tsuru',
-            desc: 'Tsuru tuneado',
-            price: '9,555.00'
-          },
-          {
-            image: 'https://i.blogs.es/736630/kathleen_brooks_1967_annie_beetle--9197/1366_2000.jpg',
-            title: 'Vochito',
-            desc: 'Vochito rojo',
-            price: '5,500.00'
-          },
-          {
-            image: 'https://cdn.motor1.com/images/mgl/LpyGR/s1/ford-raptor-renderings.jpg',
-            title: 'Raptor',
-            desc: 'Raptor 2021',
-            price: '15,500.55'
-          },
-          {
-            image: 'https://upload.wikimedia.org/wikipedia/commons/1/13/Red_2019_Ferrari_SF90_Stradale_%2848264238897%29_%28cropped%29.jpg',
-            title: 'Ferrari',
-            desc: 'Ferrari rojo',
-            price: '100,000.00'
-          },
-          {
-            image: 'https://cdn.forbes.com.mx/2016/06/tsuru-nissan.jpg',
-            title: 'Tsuru',
-            desc: 'Tsuru tuneado',
-            price: '9,555.00'
-          },
-          {
-            image: 'https://i.blogs.es/736630/kathleen_brooks_1967_annie_beetle--9197/1366_2000.jpg',
-            title: 'Vochito',
-            desc: 'Vochito rojo',
-            price: '5,500.00'
-          },
-          {
-            image: 'https://cdn.motor1.com/images/mgl/LpyGR/s1/ford-raptor-renderings.jpg',
-            title: 'Raptor',
-            desc: 'Raptor 2021',
-            price: '15,500.55'
-          },
-          {
-            image: 'https://upload.wikimedia.org/wikipedia/commons/1/13/Red_2019_Ferrari_SF90_Stradale_%2848264238897%29_%28cropped%29.jpg',
-            title: 'Ferrari',
-            desc: 'Ferrari rojo',
-            price: '100,000.00'
+      handleResize() {
+        const verifyWidthResolution = (width) => {
+          if (width < 768) {
+            this.set('showHamburger', true)
+          } else {
+            this.set('showHamburger', false)
           }
-        ];
-        this.set('cars', carsApi);
+        };
+        verifyWidthResolution(window.innerWidth);
+        window.addEventListener('resize', (e) => {
+          verifyWidthResolution(e.srcElement.innerWidth);
+        });
       }
+
+      async loadUsers() {
+        let response = await fetch('https://jsonplaceholder.typicode.com/users');
+        let users = await response.json();
+        this.set('users', users.map(u => ({
+          id: u.id,
+          name: u.name,
+          username: u.username,
+          email: u.email,
+          address: {
+            city: u.address.city,
+            street: u.address.street
+          }
+        })));
+      }
+
+      async getNewUser() {
+        let response = await fetch('https://jsonplaceholder.typicode.com/users/1');
+        let user = await response.json();
+        return user;
+      }
+
+
+      async pushElement() {
+        let newUser = await this.getNewUser();
+        this.push('users', newUser);
+      }
+
+      async popElement() {
+        this.pop('users');
+      }
+      async shiftElement() {
+        this.shift('users');
+      }
+      async unshiftElement() {
+        let newUser = await this.getNewUser();
+        this.unshift('users', newUser);
+      }
+
+      async spliceElement({
+        model: {
+          index
+        }
+      }) {
+        const boolean = confirm('Seguro que deseas eliminar el elemento?');
+        if (boolean) {
+          let newUser = await this.getNewUser();
+          this.splice('users', index, 1);
+        }
+
+      }
+
+      async replaceElement(e) {
+        let newUser = await this.getNewUser();
+        let users = this.get('users');
+        users.splice(e.model.index, 0, newUser);
+        console.log(users);
+        this.set('users', [...users]);
+      }
+
 
       seleccionarElemento(e) {
         //Obtener el objeto seleccionado

@@ -10,6 +10,10 @@ funcione el binding
 
 Computed Property
 Se utiliza para establecer el valor de una propiedad con base en el retorno de un valor.
+position: {
+        type: String,
+        computed: 'getPosition(posX, posY)' //Si algun argumento cambia, el método se ejecuta de nuevo.
+}
 
 Computed Binding
 <div class$="viewport [[isHamburgerActive(showHamburger)]]">
@@ -36,3 +40,10 @@ this.get('nombreDeLaPropiedad')
 
 Modificar el valor de una propiedad
 this.set('nombreDeLaPropiedad',nuevoValor)
+
+Arreglos como propiedades en Polymer
+this.push
+this.pop
+this.splice
+this.unshift
+this.shift

@@ -162,23 +162,27 @@
             value: false
           },
           posX: {
-            type: String //left right
+            type: String, //left right
+            value: 'right',
+            reflectToAttribute: true
           },
           posY: {
-            type: String // top bottom
+            type: String, // top bottom
+            value: 'top',
+            reflectToAttribute: true
           },
           position: {
             type: String,
-            value: 'top-right'
-          },
-          resolution: {
-            type: Number
+            computed: 'getPosition(posX, posY)'
           },
           options: {
             type: Array,
             value: []
           }
         };
+      }
+      connectedCallback() {
+        super.connectedCallback();
       }
 
       toggleHamburger() {
@@ -189,7 +193,10 @@
         return booleanValue ? 'active' : '';
       }
 
-    
+      getPosition(x, y) {
+        return `${y}-${x}`; //top-right
+      }
+
 
     }
 
