@@ -47,3 +47,60 @@ this.pop
 this.splice
 this.unshift
 this.shift
+
+Observers Simples (Con primitivos): 
+Para estar al pendiente de los cambios en una propiedad
+usuario: {
+            type: String,
+            value: 'Juan',
+            observer: '_usuarioChanged'
+}
+
+_usuarioChanged(newValue, oldValue) {
+  console.log('Observer simple:', 'Nuevo valor: ' + newValue, 'Valor anterior: ' + oldValue);
+}
+
+Observers Simples (Con referencias de objetos o arreglos)
+Para estar al pendiente de los cambios en las referencias
+  gatos: {
+            type: Array,
+            value: [
+              'michi1',
+              'michi2',
+              'michi3'
+            ],
+            observer: '_gatosObserver'
+  },
+this.set('gatos', [...nuevoArreglo]); //Si detecta el cambio porque se asigna una nueva referencias
+
+Observer complejo con arreglos
+Para estar al pendiente los cambios internos del arreglo, 
+---PERO NO DEL CAMBIO EN SU REFERENCIA-
+static get observers() {
+return [
+        Pendiente de todo, agregar, eliminar, modificar
+        // 'gatosListChanged(gatos.*)'
+        Pendiente unicamente del cambio en el tamño
+        // 'gatosListChanged(gatos.length)'
+        Pendiente de que elementos se agregan o eliminan
+        'gatosListChanged(gatos.splices)'
+]
+
+Observer complejo con objetos
+Para estar al pendiente del cambio en una sub propiedad.
+static get observers() {
+        return [
+                'perroSubpropertyChanged(perro.*)'
+        ]
+}
+
+Custom Properties
+Para personalizar estilos del componente
+:host {
+display: block;
+--map-height: 80vh;
+}
+
+#map {
+height: var(--map-height);
+}

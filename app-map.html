@@ -1,0 +1,159 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="app-map">
+  <template>
+    <style>
+      :host {
+        display: block;
+        --map-height: 80vh;
+      }
+
+      #map {
+        height: var(--map-height);
+      }
+    </style>
+
+    <div id="map"></div>
+
+  </template>
+
+  <script>
+    /**
+     * `landing-page`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class AppMap extends Polymer.Element {
+      static get is() {
+        return 'app-map';
+      }
+      static get properties() {
+        return {
+          map: {
+            type: Object
+          },
+          lat: {
+            type: Number
+          },
+          lng: {
+            type: Number
+          },
+          marker: {
+            type: Object
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          'setMarker(lat,lng)',
+        ]
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.loadResources()
+          .then(() => {
+            this.createMap();
+          })
+          .catch(err => console.error(err));
+      }
+
+      async loadResources() {
+        await this.loadStyles();
+        await this.loadScript();
+      }
+      // 19.408117606898315, -99.18758722213126
+      createMap() {
+        //this.shadowRoot.querySelector("#map")
+        //this.shadowRoot.getElementById('map')
+        let map = L.map(this.$.map).setView([19.432241, -99.177254], 13);
+        L.tileLayer(
+          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(map);
+
+        /*Solo es de ejemplo*/
+        var latlngs = [
+          [45.51, -122.68],
+          [37.77, -122.43],
+          [34.04, -118.2]
+        ];
+        var polyline = L.polyline(latlngs, {
+          color: 'red'
+        }).addTo(map);
+        // zoom the map to the polyline
+        // map.fitBounds(polyline.getBounds());
+        /*Fin del ejemplo*/
+
+
+        this.set('map', map);
+      }
+
+      createMarker(lat, lng) {
+        if (!this.get('marker')) {
+          let marker = L.marker([lat, lng], {
+            icon: L.icon({
+              // iconSize: [25, 41],
+              // iconAnchor: [10, 41],
+              // popupAnchor: [2, -40],
+              // path to url and shadow url
+              iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
+              shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png"
+            })
+          }).addTo(this.get('map'));
+          this.set('marker', marker);
+        } else {
+          let marker = this.get('marker');
+          marker.setLatLng(L.latLng(lat, lng));
+        }
+      }
+
+      setMarker(lat, lng) {
+        this.createMarker(lat, lng);
+      }
+
+      loadStyles() {
+        let promise = new Promise((resolve, reject) => {
+          try {
+            let linkTag = document.createElement('link');
+            linkTag.rel = 'stylesheet';
+            linkTag.href = 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css';
+            linkTag.integrity =
+              'sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==';
+            linkTag.crossOrigin = '';
+            linkTag.onload = () => {
+              resolve();
+            };
+            this.shadowRoot.appendChild(linkTag);
+          } catch (err) {
+            reject(err);
+          }
+        });
+        return promise;
+      }
+
+      loadScript() {
+        return new Promise((resolve, reject) => {
+          try {
+            let script = document.createElement("script");
+            script.src = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.js";
+            script.integrity =
+              "sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==";
+            script.crossOrigin = "";
+            script.onload = () => {
+              resolve();
+            };
+            this.shadowRoot.appendChild(script);
+          } catch (err) {
+            reject(err);
+          }
+        });
+      }
+    }
+    window.customElements.define(AppMap.is, AppMap);
+  </script>
+</dom-module>

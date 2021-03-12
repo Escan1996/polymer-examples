@@ -3,6 +3,7 @@
 <link rel="import" href="./app-user-card.html">
 <link rel="import" href="./app-header.html">
 <link rel="import" href="./app-hamburger.html">
+<link rel="import" href="./app-map.html">
 
 <dom-module id="landing-page">
   <template>
@@ -62,6 +63,10 @@
         row-gap: 1rem;
       }
 
+      .gatos {
+        border: 1px solid black;
+      }
+
       /* @media screen and (min-width:320px) {
         app-hamburger {
           display: inline-block;
@@ -75,11 +80,44 @@
         }
 
       } */
+      app-map {
+        --map-height: 600px;
+      }
     </style>
     <header>
       <app-header options="[[menuElements]]"></app-header>
     </header>
     <main>
+      <button on-click="startDelivery">Iniciar entrega</button>
+      <app-map lat="[[lat]]" lng="[[lng]]"></app-map>
+      <h2>
+        Datos de mi perro
+      </h2>
+      <h3>Id: [[perro.id]]</h3>
+      <h3>Color: [[perro.color]]</h3>
+      <h3>Nombre: [[perro.nombre]]</h3>
+      <button on-click="cambiarPropiedadPerro">
+        Cambiar propiedad perro
+      </button>
+
+      <h2>[[usuario]]</h2>
+      <button on-click="cambiarNombreUsuario">Cambiar nombre de usuario</button>
+
+      <h2>Color del auto: [[auto.color]]</h2>
+      <button on-click="cambiarColorAuto">Cambiar color del auto</button>
+
+      <h2>Arreglo de gatos</h2>
+      <div class="gatos">
+        <template is="dom-repeat" items="[[gatos]]" as="gato">
+          <p>[[gato]]</p>
+          <button on-click="eliminarGato">Eliminar gato</button>
+          <button on-click="modificarNombreGato">Modificar nombre</button>
+        </template>
+      </div>
+
+      <button on-click="addCat">Agregar gato</button>
+
+
       <template is="dom-if" if="{{mostrarNombrePagina}}">
         <h1>[[nombrePagina]]</h1>
       </template>
@@ -128,6 +166,44 @@
 
       static get properties() {
         return {
+
+          lat: {
+            type: Number
+          },
+          lng: {
+            type: Number
+          },
+
+          auto: {
+            type: Object,
+            value: {
+              id: 1,
+              color: 'red'
+            },
+            observer: '_autoChanged'
+          },
+          perro: {
+            type: Object,
+            value: {
+              id: 2,
+              color: 'cafe',
+              nombre: 'firulais'
+            }
+          },
+          usuario: {
+            type: String,
+            value: 'Juan',
+            observer: '_usuarioChanged'
+          },
+          gatos: {
+            type: Array,
+            value: [
+              'michi1',
+              'michi2',
+              'michi3'
+            ],
+            // observer: '_gatosObserver'
+          },
           mostrarNombrePagina: {
             type: Boolean,
             value: false
@@ -161,11 +237,92 @@
         };
       }
 
+      static get observers() {
+        return [
+          // 'gatosListChanged(gatos.*)'
+          // 'gatosListChanged(gatos.length)'
+          'gatosListChanged(gatos.splices)',
+          'perroSubpropertyChanged(perro.*)'
+        ]
+      }
+
       connectedCallback() {
         super.connectedCallback();
         this.handleResize();
         // this.loadCars();
         this.loadUsers();
+      }
+
+      startDelivery() {
+        this.loadCoords().then(coords => {
+          let index = 0;
+          let interval = setInterval(() => {
+            this.set('lat', coords[index].lat);
+            this.set('lng', coords[index].lng);
+            index++;
+            if (index === coords.length) {
+              clearInterval(interval);
+            }
+          }, 1000);
+        });
+      }
+
+      async loadCoords() {
+        let response = await fetch('/coordenates.json');
+        let coordenates = await response.json();
+        return coordenates;
+      }
+
+
+      addCat() {
+        // let nuevoArreglo = this.get('gatos');
+        // nuevoArreglo.push('panchito');
+        // this.set('gatos', [...nuevoArreglo]);
+        this.push('gatos', 'panchito');
+      }
+
+      modificarNombreGato(e) {
+        this.set('gatos.' + e.model.index, 'Michi modificado');
+      }
+
+      eliminarGato(e) {
+        this.splice('gatos', e.model.index, 1);
+      }
+
+      cambiarPropiedadPerro() {
+        this.set('perro.nombre', 'peluchin');
+      }
+
+      _gatosObserver(newValue, oldValue) {
+        console.log('Observer simple:', 'Nuevo valor: ', newValue, 'Valor anterior: ', oldValue);
+      }
+
+      _autoChanged(newValue, oldValue) {
+        // console.log('Observer simple:', 'Nuevo valor: ' + JSON.stringify(newValue), 'Valor anterior: ' + oldValue);
+      }
+
+      _usuarioChanged(newValue, oldValue) {
+        // console.log('Observer simple:', 'Nuevo valor: ' + newValue, 'Valor anterior: ' + oldValue);
+      }
+
+      perroSubpropertyChanged(val) {
+        console.log(val);
+      }
+
+      gatosListChanged(val) {
+        // console.log('Valor: ', val);
+      }
+
+      cambiarColorAuto() {
+        let vehiculo = this.get('auto');
+        vehiculo.color = 'green';
+        this.set('auto', {
+          ...vehiculo
+        });
+      }
+
+      cambiarNombreUsuario() {
+        this.set('usuario', 'Maria');
       }
 
       handleResize() {

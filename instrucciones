@@ -1,0 +1,9 @@
+1.- Crear un boton en landing page que al darle clic cree 
+una polilinea con las coordenadas del archivo "coordenates.json"
+que se encuentra en el proyecto
+
+2.- Cuando inicie el recorrido (set interval) debe crear dos marcardores,
+    -Uno con la coordenada de inicio
+    -Otro con la coordenada final
+
+3.- Colocarle una imagen diferente a los marcadores de coordenada inicial y coordenada final.
