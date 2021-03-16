@@ -43,13 +43,17 @@
           },
           marker: {
             type: Object
+          },
+          arrayPolyline: {
+            type: Array,
+            observer: '_setPolyline'
           }
         };
       }
 
       static get observers() {
         return [
-          'setMarker(lat,lng)',
+          '_setMarker(lat,lng)',
         ]
       }
 
@@ -75,21 +79,6 @@
           'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }).addTo(map);
-
-        /*Solo es de ejemplo*/
-        var latlngs = [
-          [45.51, -122.68],
-          [37.77, -122.43],
-          [34.04, -118.2]
-        ];
-        var polyline = L.polyline(latlngs, {
-          color: 'red'
-        }).addTo(map);
-        // zoom the map to the polyline
-        // map.fitBounds(polyline.getBounds());
-        /*Fin del ejemplo*/
-
-
         this.set('map', map);
       }
 
@@ -112,8 +101,32 @@
         }
       }
 
-      setMarker(lat, lng) {
+      _setMarker(lat, lng) {
         this.createMarker(lat, lng);
+      }
+
+      setLocation(latLng, pathImage) {
+        L.marker(latLng, {
+          icon: L.icon({
+            iconSize: [50, 50],
+            // iconAnchor: [10, 41],
+            // popupAnchor: [2, -40],
+            // path to url and shadow url
+            iconUrl: pathImage
+          })
+        }).addTo(this.get('map'));
+      }
+
+      _setPolyline(newValue, oldValue) {
+        let refMap = this.get('map');
+        let polyline = L.polyline(newValue, {
+          color: 'red'
+        }).addTo(refMap);
+        refMap.fitBounds(polyline.getBounds());
+        this.setLocation(newValue[0],
+          'https://png.pngtree.com/png-clipart/20190516/original/pngtree-vector-shop-icon-png-image_3762863.jpg');
+        this.setLocation(newValue[newValue.length - 1],
+          'https://www.iconpacks.net/icons/1/free-home-icon-189-thumb.png');
       }
 
       loadStyles() {

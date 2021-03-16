@@ -89,7 +89,8 @@
     </header>
     <main>
       <button on-click="startDelivery">Iniciar entrega</button>
-      <app-map lat="[[lat]]" lng="[[lng]]"></app-map>
+      <button on-click="showPolyline">Mostrar polilinea</button>
+      <app-map lat="[[lat]]" lng="[[lng]]" array-polyline="[[polyline]]"></app-map>
       <h2>
         Datos de mi perro
       </h2>
@@ -166,14 +167,15 @@
 
       static get properties() {
         return {
-
+          polyline: {
+            type: Array
+          },
           lat: {
             type: Number
           },
           lng: {
             type: Number
           },
-
           auto: {
             type: Object,
             value: {
@@ -267,12 +269,17 @@
         });
       }
 
+      showPolyline() {
+        this.loadCoords().then(coords => {
+          this.set('polyline', coords.map(c => [c.lat, c.lng]));
+        });
+      }
+
       async loadCoords() {
         let response = await fetch('/coordenates.json');
         let coordenates = await response.json();
         return coordenates;
       }
-
 
       addCat() {
         // let nuevoArreglo = this.get('gatos');
@@ -294,7 +301,7 @@
       }
 
       _gatosObserver(newValue, oldValue) {
-        console.log('Observer simple:', 'Nuevo valor: ', newValue, 'Valor anterior: ', oldValue);
+        // console.log('Observer simple:', 'Nuevo valor: ', newValue, 'Valor anterior: ', oldValue);
       }
 
       _autoChanged(newValue, oldValue) {
@@ -306,7 +313,7 @@
       }
 
       perroSubpropertyChanged(val) {
-        console.log(val);
+        // console.log(val);
       }
 
       gatosListChanged(val) {
@@ -394,7 +401,7 @@
         let newUser = await this.getNewUser();
         let users = this.get('users');
         users.splice(e.model.index, 0, newUser);
-        console.log(users);
+        // console.log(users);
         this.set('users', [...users]);
       }
 
