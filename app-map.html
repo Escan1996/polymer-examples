@@ -10,6 +10,8 @@
 
       #map {
         height: var(--map-height);
+        position: relative;
+        z-index: 1;
       }
     </style>
 
@@ -44,6 +46,10 @@
           marker: {
             type: Object
           },
+          end: {
+            type: Boolean,
+            observer: '_setEnd'
+          },
           arrayPolyline: {
             type: Array,
             observer: '_setPolyline'
@@ -66,6 +72,29 @@
           .catch(err => console.error(err));
       }
 
+      _setEnd(newValue, oldValue) {
+        const todoBien = false; //Indica si todo estuvo bien con la entrega
+        let datosQueEnviaraElEvento = null;
+        if (todoBien) {
+          datosQueEnviaraElEvento = {
+            detail: {
+              isOk: true,
+              message: 'El producto ha sido entregado satisfactoriamente'
+            }
+          }
+        } else {
+          datosQueEnviaraElEvento = {
+            detail: {
+              isOk: false,
+              message: 'El producto venia en mal estado'
+            }
+          }
+        }
+        let nombreDelEvento = 'delivery-end';
+        let customEvent = new CustomEvent(nombreDelEvento, datosQueEnviaraElEvento);
+        this.dispatchEvent(customEvent);
+      }
+
       async loadResources() {
         await this.loadStyles();
         await this.loadScript();
@@ -83,6 +112,7 @@
       }
 
       createMarker(lat, lng) {
+
         if (!this.get('marker')) {
           let marker = L.marker([lat, lng], {
             icon: L.icon({
@@ -102,7 +132,9 @@
       }
 
       _setMarker(lat, lng) {
-        this.createMarker(lat, lng);
+        if (lat && lng) {
+          this.createMarker(lat, lng);
+        }
       }
 
       setLocation(latLng, pathImage) {
@@ -124,7 +156,8 @@
         }).addTo(refMap);
         refMap.fitBounds(polyline.getBounds());
         this.setLocation(newValue[0],
-          'https://png.pngtree.com/png-clipart/20190516/original/pngtree-vector-shop-icon-png-image_3762863.jpg');
+          'https://png.pngtree.com/png-clipart/20190516/original/pngtree-vector-shop-icon-png-image_3762863.jpg'
+        );
         this.setLocation(newValue[newValue.length - 1],
           'https://www.iconpacks.net/icons/1/free-home-icon-189-thumb.png');
       }

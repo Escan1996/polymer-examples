@@ -1,0 +1,96 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="app-dialog">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        font-family: sans-serif;
+        --header-background: white;
+        --header-font-color: black;
+      }
+
+      .dialog {
+        background-color: rgba(0, 0, 0, .7);
+        position: fixed;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 99;
+      }
+
+      .dialog-content {
+        background-color: white;
+        width: 50%;
+        border-radius: 1rem;
+        overflow: hidden;
+      }
+
+      .dialog-header {
+        background-color: var(--header-background);
+        color: var(--header-font-color);
+      }
+
+      .dialog-header,
+      .dialog-body,
+      .dialog-footer {
+        padding: 1rem;
+      }
+
+      .dialog-footer {
+        display: flex;
+        justify-content: flex-end;
+      }
+    </style>
+    <template is="dom-if" if="[[show]]">
+      <div class="dialog">
+        <div class="dialog-content">
+          <div class="dialog-header">[[title]]</div>
+          <div class="dialog-body">[[message]]</div>
+          <div class="dialog-footer">
+            <button on-click="hideDialog">Close</button>
+          </div>
+        </div>
+      </div>
+    </template>
+  </template>
+
+  <script>
+    /**
+     * `app-dialog`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class AppDialog extends Polymer.Element {
+      static get is() {
+        return 'app-dialog';
+      }
+      static get properties() {
+        return {
+          title: {
+            type: String
+          },
+          message: {
+            type: String
+          },
+          show: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+      showDialog() {
+        this.set('show', true);
+      }
+      hideDialog() {
+        this.set('show', false);
+      }
+    }
+
+    window.customElements.define(AppDialog.is, AppDialog);
+  </script>
+</dom-module>
