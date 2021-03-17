@@ -29,31 +29,35 @@
         grid-template-columns: 1fr 1fr 1fr;
         column-gap: 2rem;
       }
+      button{
+        margin-top: 1rem;
+      }
     </style>
     <div>
       <h2>Actualizacion de usuario</h2>
       <div class="edit-user">
         <div>
           <label>Nombre:</label>
-          <input type="text" value="{{user.name::input}}">
+          <input type="text" value="{{name::input}}">
         </div>
         <div>
           <label>Usuario:</label>
-          <input type="text" value="{{user.username::input}}">
+          <input type="text" value="{{username::input}}">
         </div>
         <div>
           <label>Correo:</label>
-          <input type="text" value="{{user.email::input}}">
+          <input type="text" value="{{email::input}}">
         </div>
         <div>
           <label>Ciudad:</label>
-          <input type="text" value="{{user.address.city::input}}">
+          <input type="text" value="{{city::input}}">
         </div>
         <div>
           <label>Calle:</label>
-          <input type="text" value="{{user.address.street::input}}">
+          <input type="text" value="{{street::input}}">
         </div>
       </div>
+      <button on-click="update">Actualizar</button>
     </div>
 
   </template>
@@ -73,11 +77,40 @@
       }
       static get properties() {
         return {
-          user: {
-            type: Object,
-            notify: true
+          id: {
+            type: Number
+          },
+          name: {
+            type: String
+          },
+          username: {
+            type: String
+          },
+          email: {
+            type: String
+          },
+          city: {
+            type: String
+          },
+          street: {
+            type: String
           }
         };
+      }
+
+      update() {
+        this.dispatchEvent(new CustomEvent('update', {
+          detail: {
+            id: this.get('id'),
+            name: this.get('name'),
+            username: this.get('username'),
+            email: this.get('email'),
+            address: {
+              city: this.get('city'),
+              street: this.get('street')
+            }
+          }
+        }));
       }
 
     }

@@ -112,6 +112,7 @@
         padding: 1rem;
         background-color: white;
         color: black;
+        margin-top: 1rem;
       }
 
       .users-table table {
@@ -162,6 +163,7 @@
       </div>
       <img slot="imagen" src="https://aws.revistavanityfair.es/prod/designs/v1/assets/1200x945/5549.jpg" alt="">
     </app-dialog>
+    
     <header>
       <app-header options="[[menuElements]]">
         <app-user first-name="[[nombre]]" last-name="[[apellido]]" age="[[edad]]"></app-user>
@@ -179,7 +181,13 @@
         </div>
       </paper-dialog>
       <button on-click="openPaperDialog">Abrir paper dialog</button>
-      <app-table-edit-user on-user-changed="userChanged" user="{{arrayItem(selectedIndex)}}"></app-table-edit-user>
+      <template is="dom-if" if="{{selectedUser}}">
+        <app-table-edit-user on-update="onUpdateUser" id="[[selectedUser.id]]" name="[[selectedUser.name]]"
+          username="[[selectedUser.username]]" email="[[selectedUser.email]]" city="[[selectedUser.address.city]]"
+          street="[[selectedUser.address.street]]">
+        </app-table-edit-user>
+      </template>
+
       <div class="users-table">
         <h2>Usuarios</h2>
         <table>
@@ -269,7 +277,7 @@
         <button on-click="shiftElement">Eliminar al inicio</button>
       </div>
       <div class="wrapper-user-cards">
-        <template is="dom-repeat" items="[[users]]" as="user">
+        <template is="dom-repeat" items="{{users}}" as="user">
           <app-user-card on-click="replaceElement" id="[[user.id]]" name="[[user.name]]" username="[[user.username]]"
             email="[[user.email]]" address="[[user.address]]">
           </app-user-card>
@@ -397,6 +405,9 @@
           selectedIndex: {
             type: Number
           },
+          selectedUser: {
+            type: Object
+          },
           menuElements: {
             type: Array,
             value: [
@@ -426,6 +437,10 @@
         this.loadUsers();
       }
 
+      onUpdateUser(e) {
+        this.set('users.' + this.get('selectedUser.index'), e.detail);
+      }
+
       firstNameChanged(val) {
         console.log(val);
       }
@@ -435,30 +450,13 @@
         paperDialog.open();
       }
 
-      userChanged(e) {
-        // console.log(e);
-        // console.log(this.get('selectedIndex'));
-        this.set('users.' + this.get('selectedIndex') + '.name', e.detail.value);
-        // console.log(e.detail.value)
-        console.log(this.get('users.' + this.get('selectedIndex') + '.name'));
-        console.log(this.get('users'));
-        let arr = this.get('users');
-        this.set('users', [...arr]);
-        this.notifyPath(this.get('users.' + this.get('selectedIndex') + '.name'));
-      }
-
-      arrayItem(path) {
-        // this.get(path, root) returns a value for a path
-        // relative to a root object.
-        // console.log(this.get('selectedIndex'));
-        return this.get('users.' + this.get('selectedIndex'));
-      }
 
       selectUser(e) {
-        console.log(e.model.index);
-        this.set('selectedIndex', e.model.index);
-        // this.set('userSelected', this.get('users.' + ));
+        this.set('selectedUser', this.get(['users', e.model.index]));
+        //Se le agrega una propiedad adicional para posteriormente poder actualizar este item dentro del array
+        this.set('selectedUser.index', e.model.index);
       }
+
       changeUserName() {
         this.set('user.name', 'jose');
       }

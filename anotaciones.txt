@@ -104,3 +104,72 @@ display: block;
 #map {
 height: var(--map-height);
 }
+
+
+Light DOM (para inyectar HTML en algun componente)
+El html que se inyecta debe apuntar a algun slot.
+<app-dialog id="appDialog">
+      <template is="dom-if" if="[[!isOk]]">
+        <app-ticket slot="item2"></app-ticket>
+        <app-terminos-condiciones slot="item1"></app-terminos-condiciones>
+      </template>
+      <div slot="footer">
+        <div>Satisfaccion del cliente:</div>
+        <select>
+          <option>Buena</option>
+          <option>Mala</option>
+          <option>Regular</option>
+        </select>
+      </div>
+      <img slot="imagen" src="https://aws.revistavanityfair.es/prod/designs/v1/assets/1200x945/5549.jpg" alt="">
+</app-dialog>
+
+Pseudoelemento ::slotted 
+Este pseudoelemento nos ayudaba para crear un selector que unicamente tome en cuenta alguna etiqueta
+que coincida con el slot, por ejemplo:
+::slotted(img)
+Solo seleccionara el html inyectado al slot que sea "img"
+
+
+One way binding
+[[]] La comunicacion es hacia abajo, no puede notificar al padre de algun cambio
+Two Way Binding
+{{}} La comunicacion es hacia abajo y hacia arriba. Si puede notificar al padre pero el atributo
+en el hijo debe establecer un notify:true. Ademas, al usar notify:true se habilita un evento que indica
+si hubo un cambio en la propiedad. El evento generado seria: on-"nombre de la propiedad"-_usuarioChanged
+- Es conveniente trabajar el two way binding unicamente con atributos de tipo "String, Boolean o Number"
+Si se desea trabajar two way binding con propiedades del tipo Object o Array se debera tomar en cuenta
+que se debe ejecutar el metodo this.set indicando el path con el indice del arreglo a actualizar.
+Ejemplo
+this.set('users.0',nuevoElementoActualizado) --> Esto actualizaria todo el objeto contenido en la posicion
+cero del arreglo.
+
+Si se desea actualizar un objeto se debe indicar explicitamente que propiedad se actualizaria
+this.set('user.subpropiedad',nuevoValor);
+
+Metodos adicionales para actualizar Objetos y Arreglos:
+this.notifyPath('item.user.name'); o this.notifySplices para el caso de los arreglos.
+
+Pasos para importar componentes externos PAPER o IRON en polymer
+1.- Ir a webcomponents.org
+2.- Buscar el componente (Solo aplica para papers o irons)
+3.- Asegurarse de que sea una version inferior a la 3. ( Si solo muestra versiones de la tres en 
+adelante revisar que este seleccionada la opcion de "bower" para que ya muestre versiones inferiores a la 3)
+4.- Comunmente en la parte de la izquierda muestra el comando de bower para instalar el componente pero
+lo mas probable es que se instale la ultima version. Para solucionar esto se debe especificar la version
+a instalar de la siguiente forma:
+Ejemplo:
+bower install --save PolymerElements/paper-dialog#2.1.1
+Nota: El #2.1.1 debe coincidir con una version disponible del componente.
+
+Una vez que se haya instalado el componente se debe corroborar que ya esta en la propiedad "dependencies"
+del archivo bower.json
+
+Como utilizar un componente externo:
+Una vez que se aseguró que se agregó la dependencia al bower.json se deberá importar el elemento con html imports
+Por ejemplo, aqui se importan dos componentes paper. Ojo, deben ser rutas relativas.
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+
+
