@@ -7,3 +7,35 @@ que se encuentra en el proyecto
     -Otro con la coordenada final
 
 3.- Colocarle una imagen diferente a los marcadores de coordenada inicial y coordenada final.
+
+TAREA
+-Investigar los mixins de JS (Herencia multiple)
+-Investigar Behaviors en Polymer
+-Investigar mixins de CSS en polymer 
+-Investigar selector :host(.clase,[propiedad])
+
+
+Temario Polymer*Binding
+*Computed Property
+*Computed Binding
+*Gestion de eventos
+*Gestion de custom events
+	*crear y consumirlos
+*Modificar / Obtener propiedades con this.set y this.get
+*Uso del dom-repeat
+	*Gestionar los modelos que se obtienen con dom-repeat, ej: event.model.set
+*Uso del dom-if
+*metodos para manejar arreglos, push, pop,
+*Observers 
+	*simples y complejos
+	*arreglos (splice, comodin (*), length), objetos
+*one way binding, *two way binding, *notify, *readOnly, *reflectAttribute
+Gestion del ciclo de vida, connectedCallBack, AttributeChange
+selector :host(.clase,[propiedad])
+mixins css,
+*custom properties css, 
+*actualizar estilos updateStyles()
+*lightdom, 
+behaviors 
+*importar y usar componentes de terceros (iron y paper)
+mixins de js (herencia multiple)
