@@ -1,0 +1,66 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="app-profile">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        font-family: sans-serif;
+      }
+    </style>
+    <div>
+      <div>
+        <label>Nombre:</label>
+        <span>[[firstName]]</span>
+      </div>
+      <div>
+        <label>Apellido:</label>
+        <span>[[lastName]]</span>
+      </div>
+      <div>
+        <label>Edad:</label>
+        <span>[[age]]</span>
+      </div>
+    </div>
+    <div>
+      <button on-click="changeData">Cambiar datos</button>
+    </div>
+  </template>
+
+  <script>
+    /**
+     * `app-dialog`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class AppProfile extends Polymer.Element {
+      static get is() {
+        return 'app-profile';
+      }
+      static get properties() {
+        return {
+          firstName: {
+            type: String,
+            notify: true
+          },
+          lastName: {
+            type: String
+          },
+          age: {
+            type: Number
+          }
+        };
+      }
+
+      changeData() {
+        this.set('firstName', 'jose');
+      }
+
+    }
+
+    window.customElements.define(AppProfile.is, AppProfile);
+  </script>
+</dom-module>

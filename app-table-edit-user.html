@@ -1,0 +1,87 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="app-table-edit-user">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: sans-serif;
+        border: 1px solid black;
+        padding: 1rem;
+        background-color: white;
+        color: black;
+      }
+
+      input {
+        display: block;
+        width: 100%;
+        padding: .25rem 0;
+      }
+
+      label {
+        display: inline-block;
+        margin-top: .5rem;
+        font-weight: 700;
+      }
+
+      .edit-user {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        column-gap: 2rem;
+      }
+    </style>
+    <div>
+      <h2>Actualizacion de usuario</h2>
+      <div class="edit-user">
+        <div>
+          <label>Nombre:</label>
+          <input type="text" value="{{user.name::input}}">
+        </div>
+        <div>
+          <label>Usuario:</label>
+          <input type="text" value="{{user.username::input}}">
+        </div>
+        <div>
+          <label>Correo:</label>
+          <input type="text" value="{{user.email::input}}">
+        </div>
+        <div>
+          <label>Ciudad:</label>
+          <input type="text" value="{{user.address.city::input}}">
+        </div>
+        <div>
+          <label>Calle:</label>
+          <input type="text" value="{{user.address.street::input}}">
+        </div>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    /**
+     * `app-dialog`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class AppTableEditUser extends Polymer.Element {
+      static get is() {
+        return 'app-table-edit-user';
+      }
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            notify: true
+          }
+        };
+      }
+
+    }
+
+    window.customElements.define(AppTableEditUser.is, AppTableEditUser);
+  </script>
+</dom-module>

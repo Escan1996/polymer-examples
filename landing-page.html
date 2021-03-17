@@ -1,10 +1,20 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="./app-card.html">
 <link rel="import" href="./app-user-card.html">
 <link rel="import" href="./app-header.html">
 <link rel="import" href="./app-hamburger.html">
 <link rel="import" href="./app-map.html">
 <link rel="import" href="./app-dialog.html">
+<link rel="import" href="./app-ticket.html">
+<link rel="import" href="./app-terminos-condiciones.html">
+<link rel="import" href="./app-profile.html">
+<link rel="import" href="./app-user.html">
+<link rel="import" href="./app-table-edit-user.html">
+<link rel="import" href="../paper-styles/color.html">
+
+
 
 <dom-module id="landing-page">
   <template>
@@ -82,6 +92,12 @@
         }
 
       } */
+
+      .profile-data {
+        border: 2px solid black;
+        padding: 1rem;
+      }
+
       app-map {
         --map-height: 600px;
       }
@@ -90,13 +106,120 @@
         --header-background: var(--dialog-background);
         --header-font-color: white;
       }
+
+      .users-table {
+        border: 2px solid black;
+        padding: 1rem;
+        background-color: white;
+        color: black;
+      }
+
+      .users-table table {
+        display: block;
+        width: 100%;
+      }
+
+      .users-table td,
+      .users-table th {
+        padding: .25rem 2rem;
+        border: 1px solid gray;
+
+      }
+
+      .users-table th {
+        background-color: darkslategrey;
+        color: white;
+      }
+
+      .users-table button+button {
+        margin-left: .5rem;
+      }
+
+      paper-button.green {
+        background-color: var(--paper-green-500);
+        color: white;
+      }
+
+      paper-button.green[active] {
+        background-color: var(--paper-red-500);
+      }
     </style>
 
-    <app-dialog id="appDialog"></app-dialog>
+
+
+    <app-dialog id="appDialog">
+      <template is="dom-if" if="[[!isOk]]">
+        <app-ticket slot="item2"></app-ticket>
+        <app-terminos-condiciones slot="item1"></app-terminos-condiciones>
+      </template>
+      <div slot="footer">
+        <div>Satisfaccion del cliente:</div>
+        <select>
+          <option>Buena</option>
+          <option>Mala</option>
+          <option>Regular</option>
+        </select>
+      </div>
+      <img slot="imagen" src="https://aws.revistavanityfair.es/prod/designs/v1/assets/1200x945/5549.jpg" alt="">
+    </app-dialog>
     <header>
-      <app-header options="[[menuElements]]"></app-header>
+      <app-header options="[[menuElements]]">
+        <app-user first-name="[[nombre]]" last-name="[[apellido]]" age="[[edad]]"></app-user>
+      </app-header>
     </header>
     <main>
+      <paper-dialog id="paperDialog" modal>
+        <p>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint, aliquam accusamus aliquid libero a suscipit
+          aperiam molestias quod temporibus cupiditate, magnam eum, amet dolorum doloremque dicta esse ad ducimus
+          itaque.
+        </p>
+        <div>
+          <paper-button toggles raised class="green">Decline</paper-button>
+        </div>
+      </paper-dialog>
+      <button on-click="openPaperDialog">Abrir paper dialog</button>
+      <app-table-edit-user on-user-changed="userChanged" user="{{arrayItem(selectedIndex)}}"></app-table-edit-user>
+      <div class="users-table">
+        <h2>Usuarios</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Nombre</th>
+              <th>Usuario</th>
+              <th>Correo</th>
+              <th>Ciudad</th>
+              <th>Calle</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template is="dom-repeat" items="[[users]]" as="u">
+              <tr>
+                <td>[[u.id]]</td>
+                <td>[[u.name]]</td>
+                <td>[[u.username]]</td>
+                <td>[[u.email]]</td>
+                <td>[[u.address.city]]</td>
+                <td>[[u.address.street]]</td>
+                <td>
+                  <button on-click="selectUser">Editar</button>
+                  <button>Eliminar</button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+
+
+      <div class="profile-data">
+        <h2>Cambiar datos del usuario</h2>
+        <app-profile on-first-name-changed="firstNameChanged" first-name="{{nombre}}" last-name="[[apellido]]"
+          age="[[edad]]"></app-profile>
+      </div>
+
       <button on-click="openDialog">Abrir dialog</button>
       <button on-click="startDelivery">Iniciar entrega</button>
       <button on-click="showPolyline">Mostrar polilinea</button>
@@ -178,6 +301,28 @@
 
       static get properties() {
         return {
+          nombre: {
+            type: String,
+            value: 'Pedro',
+            // readOnly: true
+          },
+          apellido: {
+            type: String,
+            value: 'Martinez'
+          },
+          edad: {
+            type: Number,
+            value: 18
+          },
+          isOk: {
+            type: Boolean,
+            value: true
+          },
+          user: {
+            type: String,
+            value: 'Juan',
+            readOnly: true
+          },
           showDialog: {
             type: Boolean,
             value: true
@@ -249,6 +394,9 @@
             type: Array,
             value: []
           },
+          selectedIndex: {
+            type: Number
+          },
           menuElements: {
             type: Array,
             value: [
@@ -278,12 +426,50 @@
         this.loadUsers();
       }
 
+      firstNameChanged(val) {
+        console.log(val);
+      }
+
+      openPaperDialog() {
+        const paperDialog = this.shadowRoot.getElementById('paperDialog');
+        paperDialog.open();
+      }
+
+      userChanged(e) {
+        // console.log(e);
+        // console.log(this.get('selectedIndex'));
+        this.set('users.' + this.get('selectedIndex') + '.name', e.detail.value);
+        // console.log(e.detail.value)
+        console.log(this.get('users.' + this.get('selectedIndex') + '.name'));
+        console.log(this.get('users'));
+        let arr = this.get('users');
+        this.set('users', [...arr]);
+        this.notifyPath(this.get('users.' + this.get('selectedIndex') + '.name'));
+      }
+
+      arrayItem(path) {
+        // this.get(path, root) returns a value for a path
+        // relative to a root object.
+        // console.log(this.get('selectedIndex'));
+        return this.get('users.' + this.get('selectedIndex'));
+      }
+
+      selectUser(e) {
+        console.log(e.model.index);
+        this.set('selectedIndex', e.model.index);
+        // this.set('userSelected', this.get('users.' + ));
+      }
+      changeUserName() {
+        this.set('user.name', 'jose');
+      }
+
       openDialog(e) {
         console.log(e);
         const appDialog = this.shadowRoot.getElementById('appDialog');
         appDialog.title = "Estatus entrega";
         appDialog.message = e.detail.message;
         appDialog.showDialog();
+        this.set('isOk', e.detail.isOk);
         this.updateStyles({
           '--dialog-background': e.detail.isOk ? 'darkgreen' : 'darkred',
         });

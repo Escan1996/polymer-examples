@@ -10,6 +10,12 @@
         --header-font-color: black;
       }
 
+      ::slotted(img) {
+        width: 50px;
+        height: 50px;
+        transform: rotate(45deg);
+      }
+
       .dialog {
         background-color: rgba(0, 0, 0, .7);
         position: fixed;
@@ -40,15 +46,27 @@
 
       .dialog-footer {
         display: flex;
-        justify-content: flex-end;
+        flex-direction: column;
+
       }
     </style>
     <template is="dom-if" if="[[show]]">
       <div class="dialog">
         <div class="dialog-content">
-          <div class="dialog-header">[[title]]</div>
-          <div class="dialog-body">[[message]]</div>
+          <div class="dialog-header">
+            <span>[[title]]</span>
+            <slot name="imagen"></slot>
+          </div>
+          <div class="dialog-body">
+            <div>
+              <p>[[message]]</p>
+            </div>
+            <slot name="item1"></slot>
+            <slot name="item2"></slot>
+            <slot name="item3"></slot>
+          </div>
           <div class="dialog-footer">
+            <slot name="footer"></slot>
             <button on-click="hideDialog">Close</button>
           </div>
         </div>
@@ -83,6 +101,8 @@
           }
         };
       }
+
+
       showDialog() {
         this.set('show', true);
       }

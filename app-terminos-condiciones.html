@@ -1,0 +1,39 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="app-terminos-condiciones">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        font-family: sans-serif;
+        border: 1px solid black;
+        padding: .5rem;
+      }
+    </style>
+    <h6>TERMINOS Y CONDICIONES</h6>
+    <p>Este es el texto de los terminos y condiciones: Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
+      rem architecto culpa similique magni veritatis
+      suscipit et asperiores eius dolore. Praesentium cumque expedita earum nisi! Perspiciatis minima optio officiis
+      nobis!</p>
+  </template>
+
+  <script>
+    /**
+     * `app-dialog`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class AppTerminosCondiciones extends Polymer.Element {
+      static get is() {
+        return 'app-terminos-condiciones';
+      }
+      static get properties() {
+        return {};
+      }
+    }
+    window.customElements.define(AppTerminosCondiciones.is, AppTerminosCondiciones);
+  </script>
+</dom-module>
