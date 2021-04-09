@@ -163,7 +163,7 @@
       </div>
       <img slot="imagen" src="https://aws.revistavanityfair.es/prod/designs/v1/assets/1200x945/5549.jpg" alt="">
     </app-dialog>
-    
+
     <header>
       <app-header options="[[menuElements]]">
         <app-user first-name="[[nombre]]" last-name="[[apellido]]" age="[[edad]]"></app-user>
@@ -623,6 +623,17 @@
         users.splice(e.model.index, 0, newUser);
         // console.log(users);
         this.set('users', [...users]);
+      }
+
+      replaceElementPromise(e) {
+        this.getNewUser().then(respone => {
+          let newUser = response;
+          let users = this.get('users');
+          users.splice(e.model.index, 0, newUser);
+          // console.log(users);
+          this.set('users', [...users]);
+        });
+
       }
 
 
